@@ -11,14 +11,10 @@ public static class Program
     {
         // Load .env (if present) into process environment variables. Secrets such as
         // INTEGRATOR_KEY and login credentials live here and are never committed.
-        var envPath = Path.Combine(AppContext.BaseDirectory, ".env");
-        if (File.Exists(envPath))
+        var envPath = FindEnvFile();
+        if (envPath is not null)
         {
             Env.Load(envPath);
-        }
-        else if (File.Exists(".env"))
-        {
-            Env.Load(".env");
         }
 
         var configuration = new ConfigurationBuilder()
@@ -56,7 +52,22 @@ public static class Program
             return 1;
         }
     }
+    private static string? FindEnvFile()
+    {
+        foreach (var startDirectory in new[] { AppContext.BaseDirectory, Directory.GetCurrentDirectory() })
+        {
+            for (var directory = new DirectoryInfo(startDirectory); directory is not null; directory = directory.Parent)
+            {
+                var envPath = Path.Combine(directory.FullName, ".env");
+                if (File.Exists(envPath))
+                {
+                    return envPath;
+                }
+            }
+        }
 
+        return null;
+    }
     private static int PrintUsage()
     {
         Console.WriteLine("""
@@ -111,7 +122,7 @@ public static class Program
 
         if (string.IsNullOrWhiteSpace(userName) || string.IsNullOrWhiteSpace(password))
         {
-            Console.Error.WriteLine("CCH_USERNAME and CCH_PASSWORD must be set (see .env.example).");
+            Console.Error.WriteLine("CCH_USERNAME and CCH_PASSWORD must be set (see env.template).");
             return 1;
         }
 

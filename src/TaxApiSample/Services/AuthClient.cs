@@ -44,7 +44,9 @@ public sealed class AuthClient
             Realm = realm ?? string.Empty,
             AdfsPilotLoginCode = string.Empty,
             IsInternal = false
-        });
+        },
+        options: new JsonSerializerOptions{ PropertyNamingPolicy = null }
+        );
 
         using var response = await _httpClient.SendAsync(request, cancellationToken);
         var responseBody = await response.Content.ReadAsStringAsync(cancellationToken);

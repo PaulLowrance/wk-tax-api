@@ -17,7 +17,7 @@
 
   <ItemGroup>
     <None Include="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
-    <None Include=".env.example" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="env.template" CopyToOutputDirectory="PreserveNewest" />
     <EmbeddedResource Include="Swagger\Auth.json" />
     <EmbeddedResource Include="Swagger\tsv2.json" />
   </ItemGroup>

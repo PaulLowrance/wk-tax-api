@@ -6,7 +6,7 @@ API (`Swagger/tsv2.json`) using a session token obtained from the
 
 ## Setup
 
-1. Copy `.env.example` to `.env` and fill in your values:
+1. Copy `env.template` to `.env` and fill in your values:
    ```
    INTEGRATOR_KEY=your-integrator-or-subscription-key
    CCH_USERNAME=your-username
@@ -20,8 +20,8 @@ API (`Swagger/tsv2.json`) using a session token obtained from the
    ```json
    {
      "CchTaxApi": {
-       "AuthBaseUrl": "https://test4api.cchaxcess.com/api/AuthService",
-       "TaxServiceBaseUrl": "https://test4api.cchaxcess.com/taxservices/oiptax",
+       "AuthBaseUrl": "https://api.cchaxcess.com/api/AuthService",
+       "TaxServiceBaseUrl": "https://api.cchaxcess.com/taxservices/oiptax",
        "UseAzureAuthenticate": false
      }
    }
