@@ -1,0 +1,187 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "Authentication Login",
+        "description": "Submit user credentials and obtain session token.<br /> <br /> **_Caution_.** This API is only compatible for firms using [CCH Axcess login method]( https://z001download.cchaxcess.com/pfxbrowserhelp/FAMHelp/Content/ADPlugin/AD_CCHLoginMode.htm \"view help article\"). We recommend third party applications use [OAuth 2.0 token authentication](https://support.cch.com/kb/solution/000106115 \"view help article\") for all firms.",
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "https://test4api.cchaxcess.com/api/AuthService"
+        },
+        {
+            "url": "https://test4authcaptcha.cchaxcess.com/api/AuthService"
+        },
+        {
+            "url": "https://test4login.cchaxcess.com/api/AuthService"
+        },
+        {
+            "url": "https://test4authadmin.cchaxcess.com/api/AuthService"
+        },
+        {
+            "url": "https://test4directoryservice.cchaxcess.com/api/AuthService"
+        },
+        {
+            "url": "https://test4taxapi.cchaxcess.com/api/AuthService"
+        },
+        {
+            "url": "https://test4k1api.cchaxcess.com/api/AuthService"
+        }
+    ],
+    "paths": {
+        "/v1.0/Authenticate": {
+            "post": {
+                "summary": "Authenticates the user",
+                "description": "Authenticates the user",
+                "operationId": "Authenticates-the-user",
+                "parameters": [
+                    {
+                        "name": "Integratorkey",
+                        "in": "header",
+                        "description": "integratorkey or subscription key in header",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Authenticates the user",
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "UserName": "String content",
+                                "UserSid": "String content",
+                                "Password": "String content",
+                                "Realm": "String content",
+                                "AdfsPilotLoginCode": "String content",
+                                "IsInternal": true
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "Token": {}
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1.0/AzureAuthenticate": {
+            "post": {
+                "summary": "Azure - Authenticates the user.",
+                "description": "Azure - Authenticates the user.",
+                "operationId": "Authenticates-the-user---Azure",
+                "parameters": [
+                    {
+                        "name": "Integratorkey",
+                        "in": "header",
+                        "description": "integratorkey or subscription key in header",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Azure - Authenticates the user.",
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "UserName": "String content",
+                                "UserSid": "String content",
+                                "Password": "String content",
+                                "Realm": "String content",
+                                "AdfsPilotLoginCode": "String content",
+                                "IsInternal": true
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "Token": {}
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1.0/MobileAuthenticate": {
+            "post": {
+                "summary": "Mobile - Authenticates the user.",
+                "description": "Mobile - Authenticates the user.",
+                "operationId": "Authenticates-the-user---Mobile",
+                "parameters": [
+                    {
+                        "name": "Integratorkey",
+                        "in": "header",
+                        "description": "integratorkey or subscription key in header",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Mobile - Authenticates the user.",
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "UserName": "String content",
+                                "UserSid": "String content",
+                                "Password": "String content",
+                                "Realm": "String content",
+                                "AdfsPilotLoginCode": "String content",
+                                "IsInternal": true
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "Token": {}
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "apiKeyHeader": {
+                "type": "apiKey",
+                "name": "IntegratorKey",
+                "in": "header"
+            },
+            "apiKeyQuery": {
+                "type": "apiKey",
+                "name": "subscription-key",
+                "in": "query"
+            }
+        }
+    },
+    "security": [
+        {
+            "apiKeyHeader": []
+        },
+        {
+            "apiKeyQuery": []
+        }
+    ]
+}
