@@ -3,24 +3,52 @@ using MyCCHTools.Configuration;
 using MyCCHTools.Services;
 using Spectre.Console;
 
-var baseUrl = LoadBaseUrl();
 var tokenCache = new TokenCache();
+var loginAttempt = 0;
 
 try
 {
-    var configuration = EnvironmentConfiguration.Load(baseUrl);
+    var baseUrl = LoadBaseUrl();
     using var httpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(60) };
     var authenticationClient = new AuthenticationClient(httpClient);
-    var result = await authenticationClient.AuthenticateAsync(configuration, CancellationToken.None);
-    tokenCache.Store(result.Token, result.ExpiresAt);
 
-    AnsiConsole.MarkupLine("[green]Login successful.[/] The token is cached for this session.");
+    while (tokenCache.Get() is null)
+    {
+        try
+        {
+            var configuration = EnvironmentConfiguration.Load(baseUrl, loginAttempt > 0);
+            var result = await authenticationClient.AuthenticateAsync(configuration, CancellationToken.None);
+            tokenCache.Store(result.Token, result.ExpiresAt);
+            AnsiConsole.MarkupLine("[green]Login successful.[/] The token is cached for this session.");
+        }
+        catch (OperationCanceledException)
+        {
+            AnsiConsole.MarkupLine("[yellow]The operation was cancelled.[/]");
+        }
+        catch (Exception exception)
+        {
+            AnsiConsole.MarkupLine($"[red]Login failed:[/] {Markup.Escape(exception.Message)}");
+        }
+
+        if (tokenCache.Get() is not null)
+        {
+            break;
+        }
+
+        loginAttempt++;
+        var retry = AnsiConsole.Confirm("Try the login again?", defaultValue: true);
+        if (!retry)
+        {
+            return 0;
+        }
+    }
+
     await ShowActionMenuAsync(tokenCache);
     return 0;
 }
 catch (Exception exception)
 {
-    Console.Error.WriteLine(exception);
+    AnsiConsole.MarkupLine($"[red]Application error:[/] {Markup.Escape(exception.Message)}");
     return 1;
 }
 

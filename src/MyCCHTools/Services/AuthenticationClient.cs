@@ -30,7 +30,14 @@ public sealed class AuthenticationClient(HttpClient httpClient)
 
         using var response = await httpClient.SendAsync(httpRequest, cancellationToken);
         var responseBody = await response.Content.ReadAsStringAsync(cancellationToken);
-        response.EnsureSuccessStatusCode();
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new HttpRequestException(
+                $"Authentication request failed with HTTP {(int)response.StatusCode} ({response.ReasonPhrase}). " +
+                $"Response: {responseBody}",
+                null,
+                response.StatusCode);
+        }
 
         try
         {
@@ -42,6 +49,13 @@ public sealed class AuthenticationClient(HttpClient httpClient)
         {
             throw new InvalidOperationException(
                 $"Authentication response could not be parsed as JSON. Response: {responseBody}",
+                exception);
+        }
+        catch (InvalidOperationException exception)
+        {
+            throw new InvalidOperationException(
+                $"Authentication response JSON was not in the expected format: {exception.Message} " +
+                $"Response: {responseBody}",
                 exception);
         }
     }

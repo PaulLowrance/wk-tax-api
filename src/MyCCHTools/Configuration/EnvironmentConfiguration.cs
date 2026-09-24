@@ -11,7 +11,7 @@ public sealed record EnvironmentConfiguration(
     bool IsInternal,
     string AuthenticationBaseUrl)
 {
-    public static EnvironmentConfiguration Load(string authenticationBaseUrl)
+    public static EnvironmentConfiguration Load(string authenticationBaseUrl, bool promptForCredentials = false)
     {
         LoadDotEnv();
 
@@ -22,10 +22,10 @@ public sealed record EnvironmentConfiguration(
                 "Configuration error: INTEGRATOR_KEY is required and cannot be prompted for.");
         }
 
-        var userName = GetOrPrompt("CCH_USERNAME", "CCH username");
-        var password = GetOrPrompt("CCH_PASSWORD", "CCH password", true);
-        var userSid = GetOrPrompt("CCH_USER_SID", "CCH user SID");
-        var realm = GetOrPrompt("CCH_REALM", "CCH realm");
+        var userName = GetOrPrompt("CCH_USERNAME", "CCH username", forcePrompt: promptForCredentials);
+        var password = GetOrPrompt("CCH_PASSWORD", "CCH password", true, promptForCredentials);
+        var userSid = GetOrPrompt("CCH_USER_SID", "CCH user SID", forcePrompt: promptForCredentials);
+        var realm = GetOrPrompt("CCH_REALM", "CCH realm", forcePrompt: promptForCredentials);
         var isInternal = ParseBoolean(Environment.GetEnvironmentVariable("CCH_IS_INTERNAL"), true);
 
         return new EnvironmentConfiguration(
@@ -38,10 +38,10 @@ public sealed record EnvironmentConfiguration(
             Environment.GetEnvironmentVariable("CCH_AUTH_BASE_URL") ?? authenticationBaseUrl);
     }
 
-    private static string GetOrPrompt(string key, string label, bool secret = false)
+    private static string GetOrPrompt(string key, string label, bool secret = false, bool forcePrompt = false)
     {
         var value = Environment.GetEnvironmentVariable(key);
-        if (!string.IsNullOrWhiteSpace(value))
+        if (!forcePrompt && !string.IsNullOrWhiteSpace(value))
         {
             return value;
         }
